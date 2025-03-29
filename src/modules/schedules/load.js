@@ -11,11 +11,10 @@ export async function schedulesDay(){
 
   // Fetch in API the schedules
   const dailySchedules = await scheduleFetchByDay({date})
-  console.log(dailySchedules)
 
   //Display schedules
   schedulesShow({ dailySchedules })
 
   // Render available schedules
-  hoursLoad({date})
+  hoursLoad({date, dailySchedules})
 }

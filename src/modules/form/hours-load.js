@@ -1,14 +1,17 @@
 import dayjs from "dayjs"
 
 import { operningHours } from "../../utils/opening-hours.js"
-
 import { hoursClick } from "../form/hours-click.js"
 
 const hours = document.getElementById("hours")
 
-export function hoursLoad({date}) {
+export function hoursLoad({date, dailySchedules}) {
   // Clear schedule hours list
   hours.innerHTML = "" 
+
+  // Obtain the list of all schedules hours
+  const unavailableHours = dailySchedules.map((schedule) => dayjs(schedule.when).format("HH:mm"))
+
   const opening = operningHours.map((hour) => {
     // Retrieve only the hour
     const [scheduleHour] = hour.split(":")
@@ -16,9 +19,12 @@ export function hoursLoad({date}) {
     // Add hour to date and verify if it is on the past
     const isHourPast = dayjs(date).add(scheduleHour, "hour").isBefore(dayjs())  
 
+    // Verify hours availables
+    const available = !unavailableHours.includes(hour) && !isHourPast
+
     return {
       hour,
-      available: !isHourPast,
+      available,
     }
   })
 
